@@ -1,0 +1,6 @@
+# Ignore cached files
+webroot/*
+!webroot/empty
+# Ignore files from Eclipse IDE
+.project
+.settings

@@ -1,0 +1,3 @@
+[submodule "src/vendor/jade.php"]
+	path = src/vendor/jade.php
+	url = git@github.com:ni-c/jade.php.git
