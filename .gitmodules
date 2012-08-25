@@ -1,3 +1,9 @@
 [submodule "src/vendor/jade.php"]
 	path = src/vendor/jade.php
 	url = git@github.com:ni-c/jade.php.git
+[submodule "src/vendor/lessphp"]
+	path = src/vendor/lessphp
+	url = git@github.com:ni-c/lessphp.git
+[submodule "src/vendor/php-markdown"]
+	path = src/vendor/php-markdown
+	url = git@github.com:ni-c/php-markdown.git

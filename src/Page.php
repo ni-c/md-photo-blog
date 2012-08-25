@@ -2,17 +2,17 @@
 /**
  * PHP version 5
  *
- * photo-md-blog : Markdown Blog for Photos
+ * md-photo-blog : Markdown Blog for Photos
  * Copyright 2012, Willi Thiel
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright Copyright 2012, Willi Thiel
- * @link http://ni-c.github.de/photo-md-blog
- * @package photo-md-blog
- * @subpackage photo-md-blog.app
- * @since photo-md-blog v 0.1a
+ * @link http://ni-c.github.de/md-photo-blog
+ * @package md-photo-blog
+ * @subpackage md-photo-blog.app
+ * @since md-photo-blog v 0.1a
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -72,6 +72,7 @@ abstract class Page {
 		foreach ($this->get_content() as $key => $value) {
 			$$key = $value;
 		}
+		$blog_title = BLOG_TITLE;
 
 		// Load layout and body
 		$layout = file_get_contents(VIEWS_DIRECTORY . DIRECTORY_SEPARATOR . 'layout.jade');

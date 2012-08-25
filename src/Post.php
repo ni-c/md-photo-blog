@@ -2,20 +2,22 @@
 /**
  * PHP version 5
  *
- * photo-md-blog : Markdown Blog for Photos
+ * md-photo-blog : Markdown Blog for Photos
  * Copyright 2012, Willi Thiel
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright Copyright 2012, Willi Thiel
- * @link http://ni-c.github.de/photo-md-blog
- * @package photo-md-blog
- * @subpackage photo-md-blog.app
- * @since photo-md-blog v 0.1a
+ * @link http://ni-c.github.de/md-photo-blog
+ * @package md-photo-blog
+ * @subpackage md-photo-blog.app
+ * @since md-photo-blog v 0.1a
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+ require_once('vendor' . DIRECTORY_SEPARATOR . 'php-markdown' . DIRECTORY_SEPARATOR . 'markdown.php');
+ 
 /**
  * The image subdirectory
  */
@@ -35,6 +37,21 @@ class Post extends Page {
 	 * The URLs of the images in this post
 	 */
 	private $images = array();
+
+	/**
+	 * The title of the post
+	 */
+	private $title = "";
+	
+	/**
+	 * The date of the post
+	 */
+	private $post_date = null;
+
+	/**
+	 * The text of the post
+	 */
+	private $text = "";
 
 	/**
 	 * Create a new home
@@ -57,10 +74,23 @@ class Post extends Page {
 		}
 
 		// Create image array
-		$this -> images = $this -> dir_to_array(WEBROOT_DIRECTORY . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . IMAGE_SUBDIRECTORY, true, true, true);
+		$this -> images = $this -> dir_to_array(WEBROOT_DIRECTORY . DIRECTORY_SEPARATOR . $name, true, true, true);
 		foreach ($this->images as $key => $value) {
 			$this->images[$key] = str_replace(WEBROOT_DIRECTORY . DIRECTORY_SEPARATOR, "", $value);
 		}
+
+		// Parse markdown file
+		$mdcontent = file_get_contents(POSTS_DIRECTORY . DIRECTORY_SEPARATOR . $this -> name . DIRECTORY_SEPARATOR . 'meta.md');
+		$comments = explode("\n", substr($mdcontent, strpos($mdcontent, '/*')+2, strpos($mdcontent, '*/')-2));
+		foreach ($comments as $key => $value) {
+			if (strpos($value, "Title: ")!==false) {
+				$this->title = trim(str_replace("Title: ", "", $value));
+			}
+			if (strpos($value, "Date: ")!==false) {
+				$this->post_date = trim(str_replace("Date: ", "", $value));
+			}
+		}
+		$this->text = Markdown(substr($mdcontent, strpos($mdcontent, '*/')+2));
 	}
 
 	/**
@@ -72,10 +102,8 @@ class Post extends Page {
 		$files = $this -> dir_to_array(POSTS_DIRECTORY . DIRECTORY_SEPARATOR . $this -> name, true, true, true);
 
 		$cache_dir = WEBROOT_DIRECTORY . DIRECTORY_SEPARATOR . $this -> name;
-		$image_dir = WEBROOT_DIRECTORY . DIRECTORY_SEPARATOR . $this -> name . DIRECTORY_SEPARATOR . IMAGE_SUBDIRECTORY;
 
 		@mkdir($cache_dir);
-		@mkdir($image_dir);
 
 		foreach ($files as $key => $value) {
 
@@ -84,7 +112,7 @@ class Post extends Page {
 			// Resample JPG files
 			$ext = strtolower(pathinfo($files[$key], PATHINFO_EXTENSION));
 			if ($ext == 'jpg' || $ext = 'jpeg') {
-				ImageHelper::resample($value, $image_dir . DIRECTORY_SEPARATOR . $filename . "." . $ext, DEFAULT_IMG_WIDTH);
+				ImageHelper::resample($value, $cache_dir . DIRECTORY_SEPARATOR . $filename . "." . $ext, DEFAULT_IMG_WIDTH);
 			}
 		}
 	}
@@ -94,8 +122,11 @@ class Post extends Page {
 	 */
 	protected function get_content() {
 		return array(
-			'layout_title' => 'md-photo-blog',
-			'images' => $this->images,
+			'title' => BLOG_TITLE . ' - ' . $this->title,
+			'post_date' => $this->post_date,
+			'post_title' => $this->title,
+			'post_text' => $this->text,
+			'post_images' => $this->images,
 		);
 	}
 	

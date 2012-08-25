@@ -1,3 +1,7 @@
-- foreach ($images as $k => $image)
-  div
+p.post-date {{$post_date}}
+h1.post-title {{$post_title}}
+div.post-text 
+  {{$post_text}}
+- foreach ($post_images as $k => $image)
+  p
     img(src='{{$image}}', alt='')
