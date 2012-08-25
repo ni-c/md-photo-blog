@@ -20,7 +20,22 @@
  * class autoloader
  */
 function __autoload($classname) {
-	include 'src/' . $classname . '.php';
+	
+	$autoloaddirs = array(
+		'src/',
+		'src/vendor/jade.php/src/Everzet/Jade/',
+		'src/vendor/jade.php/src/Everzet/Jade/Dumper/',
+		'src/vendor/jade.php/src/Everzet/Jade/Filter/',
+		'src/vendor/jade.php/src/Everzet/Jade/Lexer/',
+		'src/vendor/jade.php/src/Everzet/Jade/Node/',
+		'src/vendor/jade.php/src/Everzet/Jade/Visitor/',
+	);
+		
+	foreach ($autoloaddirs as $key => $value) {
+		if (file_exists($value . $classname . '.php')) {
+			include $value . $classname . '.php';
+		}
+	}
 }
 
 /**

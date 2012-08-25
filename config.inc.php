@@ -22,6 +22,11 @@
 define("POSTS_DIRECTORY", getcwd() . DIRECTORY_SEPARATOR . 'posts');
 
 /**
+ * Directory that contains the post files
+ */
+define("VIEWS_DIRECTORY", getcwd() . DIRECTORY_SEPARATOR . 'views');
+
+/**
  * Caching directory
  */
 define("WEBROOT_DIRECTORY", getcwd() . DIRECTORY_SEPARATOR . 'webroot');

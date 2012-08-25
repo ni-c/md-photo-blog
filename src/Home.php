@@ -17,7 +17,7 @@
 */
 
 /**
- * Home class
+ * Home represents the home directory
  */
 class Home extends Page {
 	

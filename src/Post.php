@@ -56,7 +56,11 @@ class Post extends Page {
 			$this -> cache();
 		}
 
+		// Create image array
 		$this -> images = $this -> dir_to_array(WEBROOT_DIRECTORY . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . IMAGE_SUBDIRECTORY, true, true, true);
+		foreach ($this->images as $key => $value) {
+			$this->images[$key] = str_replace(WEBROOT_DIRECTORY . DIRECTORY_SEPARATOR, "", $value);
+		}
 	}
 
 	/**
@@ -86,13 +90,20 @@ class Post extends Page {
 	}
 
 	/**
-	 * Render the post
+	 * Returns the template of the page
 	 */
-	function render() {
-		foreach ($this->images as $key => $value) {
-			$filename = pathinfo($value, PATHINFO_FILENAME) . "." . pathinfo($value, PATHINFO_EXTENSION);
-			echo '<img src="' . $this -> name . '/' . IMAGE_SUBDIRECTORY . '/' . $filename . '" />';
-		}
+	protected function get_content() {
+		return array(
+			'layout_title' => 'md-photo-blog',
+			'images' => $this->images,
+		);
+	}
+	
+	/**
+	 * Returns the content for the template of the page
+	 */
+	protected function get_template() {
+		return 'post';
 	}
 
 }

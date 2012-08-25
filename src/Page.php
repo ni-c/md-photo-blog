@@ -65,6 +65,38 @@ abstract class Page {
 	/**
 	 * Render the page
 	 */
-	abstract function render();
+	final public function render() {
+		$jade = JadeFactory::create();
 
+		// Dump content to local vars
+		foreach ($this->get_content() as $key => $value) {
+			$$key = $value;
+		}
+
+		// Load layout and body
+		$layout = file_get_contents(VIEWS_DIRECTORY . DIRECTORY_SEPARATOR . 'layout.jade');
+		$body = file_get_contents(VIEWS_DIRECTORY . DIRECTORY_SEPARATOR . $this->get_template() . '.jade');
+
+		// Indent body	
+		$tmp1 = explode("!= body", $layout);
+		$tmp2 = explode("\n", $tmp1[0]);
+		$indentation = $tmp2[sizeof($tmp2)-1];
+		$body = str_replace("\n", "\n" . $indentation, $body) . "\n";
+
+		// Merge body with layout
+		$template = str_replace("!= body", $body, $layout);
+		
+		// Render
+		$str = eval ('?>' . $jade->render($template));
+	}
+
+	/**
+	 * Returns the template of the page
+	 */
+	abstract protected function get_template();
+	
+	/**
+	 * Returns the content for the template of the page
+	 */
+	abstract protected function get_content();
 }
